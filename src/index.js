@@ -32,7 +32,7 @@ const isEven = a => a % 2 === 0;
 const isOdd = a => a % 2 !== 0;
 
 /**
- * This method assumes that operations is an object like so:
+ * This method assumes that operations is an object like the following:
  * const operations = {
  *   EQUALS: equals (function),
  *   GREATER_THAN: greaterThan(function)
@@ -48,7 +48,7 @@ const isOdd = a => a % 2 !== 0;
  * @param {Array} filters
  * @param {boolean} satisfyAllFilters
  */
-const addOperations = operations => (filters, satisfyAllFilters) => {
+const initializeOperations = operations => (filters, satisfyAllFilters = true) => {
   const allFiltersTrue = object => filters.reduce(
     (result, filter) => (result
       ? compareFieldToValue(operations[filter.operation])(filter.field)(filter.value)(object)
@@ -80,5 +80,5 @@ export {
   matchCaseSensitive,
   isEven,
   isOdd,
-  addOperations,
+  initializeOperations,
 };

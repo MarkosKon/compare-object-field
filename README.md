@@ -123,9 +123,9 @@ const badPurchase = products.filter(product => satisfiesAllFilters(product, curr
 
 or you can use the already **implemented method**: 
 ```
-import { setupFilters } from "compare-object-field"
+import { initializeOperations } from "compare-object-field"
 
-const addFilters = addOperations(operations); // this can be saved for later, it's an initialization.
+const addFilters = initializeOperations(operations); // this can be saved for later, it's an initialization.
 
 const allFiltersTrue = true;
 const satisfiesFilters = addFilters(currentFilters, allFiltersTrue);

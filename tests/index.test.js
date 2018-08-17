@@ -1,4 +1,19 @@
-import compareFieldToValue, { equals, lessThan, greaterThan, addOperations } from '../src/index';
+import compareFieldToValue, {
+  initializeOperations,
+  equals,
+  notEquals,
+  greaterThan,
+  lessThan,
+  includes,
+  notIncludes,
+  isIncludedIn,
+  notIncludedIn,
+  match,
+  notMatch,
+  matchCaseSensitive,
+  isEven,
+  isOdd,
+} from '../src/index';
 
 const products = [
   {
@@ -21,14 +36,14 @@ const products = [
   },
 ];
 
-test('simple example #1', () => {
+test('README example #1', () => {
   const person = { name: 'John' };
   const result = compareFieldToValue(equals)('name')('John')(person);
 
   expect(result).toBe(true);
 });
 
-test('simple example #2', () => {
+test('README example #2', () => {
   const fieldLessThan = compareFieldToValue(lessThan); // We can use it later on other objects
   const costLessThan200 = fieldLessThan('cost')(200);
 
@@ -44,8 +59,7 @@ test('simple example #2', () => {
   ]);
 });
 
-test('use case generic form with map', () => {
-
+test('README example #3 (with map)', () => {
   const currentFilters = [
     { field: 'year', operation: 'EQUALS', value: 2016 },
     { field: 'cost', operation: 'GREATER_THAN', value: 500 },
@@ -56,9 +70,9 @@ test('use case generic form with map', () => {
     GREATER_THAN: greaterThan,
   };
 
-  const satisfiesAllFilters = (product, filters) => !filters.map(
-    filter => compareFieldToValue(operations[filter.operation])(filter.field)(filter.value)(product)
-  ).includes(false);
+  const satisfiesAllFilters = (product, filters) => !filters
+    .map(filter => compareFieldToValue(operations[filter.operation])(filter.field)(filter.value)(product))
+    .includes(false);
 
   const badPurchase = products.filter(product => satisfiesAllFilters(product, currentFilters));
 
@@ -72,8 +86,7 @@ test('use case generic form with map', () => {
   ]);
 });
 
-test('use case generic form with reduce', () => {
-
+test('README example #3 (with reduce)', () => {
   const currentFilters = [
     { field: 'year', operation: 'EQUALS', value: 2016 },
     { field: 'cost', operation: 'GREATER_THAN', value: 500 },
@@ -103,8 +116,7 @@ test('use case generic form with reduce', () => {
   ]);
 });
 
-test('use case generic form with predefined method', () => {
-  
+test('README example #3 (with implemented method)', () => {
   const currentFilters = [
     { field: 'year', operation: 'EQUALS', value: 2016 },
     { field: 'cost', operation: 'GREATER_THAN', value: 500 },
@@ -115,7 +127,7 @@ test('use case generic form with predefined method', () => {
     GREATER_THAN: greaterThan,
   };
 
-  const addFilters = addOperations(operations);
+  const addFilters = initializeOperations(operations);
   const satisfiesFilters = addFilters(currentFilters, true);
   const badPurchase = products.filter(satisfiesFilters);
 
@@ -128,3 +140,314 @@ test('use case generic form with predefined method', () => {
     },
   ]);
 });
+
+test('equals operation #1', () => {
+  const a = 1;
+  const b = 1;
+  expect(equals(a, b)).toEqual(true);
+});
+
+test('equals operation #2', () => {
+  const a = 'text';
+  const b = 'text';
+  expect(equals(a, b)).toEqual(true);
+});
+
+test('equals operation #3', () => {
+  const a = { type: 'text' };
+  const b = a;
+  expect(equals(a, b)).toEqual(true);
+});
+
+test('equals operation #4', () => {
+  const a = [1, 2, 3];
+  const b = a;
+  expect(equals(a, b)).toEqual(true);
+});
+
+test('notEquals operation #1', () => {
+  const a = 1;
+  const b = 2;
+  expect(notEquals(a, b)).toEqual(true);
+});
+
+test('notEquals operation #2', () => {
+  const a = 'text';
+  const b = 'video';
+  expect(notEquals(a, b)).toEqual(true);
+});
+
+test('notEquals operation #3', () => {
+  const a = { type: 'text' };
+  const b = { type: 'text' };
+  expect(notEquals(a, b)).toEqual(true);
+});
+
+test('notEquals operation #4', () => {
+  const a = [1, 2, 3];
+  const b = [1, 2, 3];
+  expect(notEquals(a, b)).toEqual(true);
+});
+
+test('greaterThan operation #1', () => {
+  const a = 2;
+  const b = 1;
+  expect(greaterThan(a, b)).toEqual(true);
+});
+
+test('greaterThan operation #2', () => {
+  const a = 'video';
+  const b = 'text';
+  expect(greaterThan(a, b)).toEqual(true);
+});
+
+test('greaterThan operation #3', () => {
+  const a = { type: 'text' };
+  const b = { type: 'video' };
+  expect(greaterThan(a, b)).toEqual(false);
+});
+
+test('greaterThan operation #4', () => {
+  const a = [1, 2, 3, 4];
+  const b = [1, 2, 3];
+  expect(greaterThan(a, b)).toEqual(true);
+});
+
+test('lessThan operation #1', () => {
+  const a = 1;
+  const b = 1.1;
+  expect(lessThan(a, b)).toEqual(true);
+});
+
+test('lessThan operation #2', () => {
+  const a = 'GIF';
+  const b = 'text';
+  expect(lessThan(a, b)).toEqual(true);
+});
+
+test('lessThan operation #3', () => {
+  const a = { type: 'text' };
+  const b = { type: 'video' };
+  expect(lessThan(a, b)).toEqual(false);
+});
+
+test('lessThan operation #4', () => {
+  const a = [1, 2];
+  const b = ["1", "2", "3"];
+  expect(lessThan(a, b)).toEqual(true);
+});
+
+test('includes operation #1', () => {
+  const a = 'My name is John';
+  const b = 'John';
+  expect(includes(a, b)).toEqual(true);
+});
+
+test('includes operation #2', () => {
+  const a = 'My name is John';
+  const b = 'Mark';
+  expect(includes(a, b)).toEqual(false);
+});
+
+test('includes operation #3', () => {
+  const a = [1, 2, 3];
+  const b = [1];
+  expect(includes(a, b)).toEqual(false);
+});
+
+test('includes operation #4', () => {
+  const a = [1, 2, 3];
+  const b = 2;
+  expect(includes(a, b)).toEqual(true);
+});
+
+test('notIncludes operation #1', () => {
+  const a = 'My name is John';
+  const b = 'Mark';
+  expect(notIncludes(a, b)).toEqual(true);
+});
+
+test('notIncludes operation #2', () => {
+  const a = [1, 2, 3];
+  const b = 4;
+  expect(notIncludes(a, b)).toEqual(true);
+});
+
+test('notIncludes operation #3', () => {
+  const a = [1, 2, 3];
+  const b = true;
+  expect(notIncludes(a, b)).toEqual(true);
+});
+
+test('isIncludedIn operation #1', () => {
+  const a = 1;
+  const b = [1, 2, 3];
+  expect(isIncludedIn(a, b)).toEqual(true);
+});
+
+test('isIncludedIn operation #2', () => {
+  const a = 4;
+  const b = [1, 2, 3];
+  expect(isIncludedIn(a, b)).toEqual(false);
+});
+
+test('isIncludedIn operation #3', () => {
+  const a = "a";
+  const b = [1, 2, 3];
+  expect(isIncludedIn(a, b)).toEqual(false);
+});
+
+test('isIncludedIn operation #4', () => {
+  const a = [1];
+  const b = [1, 2, 3];
+  expect(isIncludedIn(a, b)).toEqual(false);
+});
+
+test('notIncludedIn operation #1', () => {
+  const a = 1;
+  const b = [1, 2, 3];
+  expect(notIncludedIn(a, b)).toEqual(false);
+});
+
+test('notIncludedIn operation #2', () => {
+  const a = 4;
+  const b = [1, 2, 3];
+  expect(notIncludedIn(a, b)).toEqual(true);
+});
+
+test('notIncludedIn operation #3', () => {
+  const a = "a";
+  const b = [1, 2, 3];
+  expect(notIncludedIn(a, b)).toEqual(true);
+});
+
+test('notIncludedIn operation #4', () => {
+  const a = [1];
+  const b = [1, 2, 3];
+  expect(notIncludedIn(a, b)).toEqual(true);
+});
+
+test('match operation #1', () => {
+  const a = "My name is Mark";
+  const b = 'Mark';
+  expect(match(a, b)).toEqual(true);
+});
+
+test('match operation #2', () => {
+  const a = "My name is Mark";
+  const b = 'Jack';
+  expect(match(a, b)).toEqual(false);
+});
+
+test('match operation #3', () => {
+  const a = "My name is Mark";
+  const b = '\\d+';
+  expect(match(a, b)).toEqual(false);
+});
+
+test('match operation #4', () => {
+  const a = "My name is Mark";
+  const b = '\\w+';
+  expect(match(a, b)).toEqual(true);
+});
+
+test('match operation #5', () => {
+  const a = "1";
+  const b = '\\d+';
+  expect(match(a, b)).toEqual(true);
+});
+
+test('notMatch operation #1', () => {
+  const a = "My name is Mark";
+  const b = 'Mark';
+  expect(notMatch(a, b)).toEqual(false);
+});
+
+test('notMatch operation #2', () => {
+  const a = "My name is Mark";
+  const b = 'Jack';
+  expect(notMatch(a, b)).toEqual(true);
+});
+
+test('notMatch operation #3', () => {
+  const a = "My name is Mark";
+  const b = '\\d+';
+  expect(notMatch(a, b)).toEqual(true);
+});
+
+test('notMatch operation #4', () => {
+  const a = "My name is Mark";
+  const b = '\\w+';
+  expect(notMatch(a, b)).toEqual(false);
+});
+
+test('notMatch operation #5', () => {
+  const a = "1";
+  const b = '\\d+';
+  expect(notMatch(a, b)).toEqual(false);
+});
+
+test('matchCaseSensitive operation #1', () => {
+  const a = "John doe";
+  const b = 'john';
+  expect(matchCaseSensitive(a, b)).toEqual(false);
+});
+
+test('matchCaseSensitive operation #2', () => {
+  const a = "John doe";
+  const b = 'John';
+  expect(matchCaseSensitive(a, b)).toEqual(true);
+});
+
+test('isEven operation #1', () => {
+  const a = 'Mark';
+  expect(isEven(a)).toEqual(false);
+});
+
+test('isEven operation #2', () => {
+  const a = 4;
+  expect(isEven(a)).toEqual(true);
+});
+
+test('isEven operation #3', () => {
+  const a = 5;
+  expect(isEven(a)).toEqual(false);
+});
+
+test('isEven operation #4', () => {
+  const a = [2, 4];
+  expect(isEven(a)).toEqual(false);
+});
+
+test('isEven operation #5', () => {
+  const a = 2.0;
+  expect(isEven(a)).toEqual(true);
+});
+
+test('isEven operation #6', () => {
+  const a = 2.1;
+  expect(isEven(a)).toEqual(false);
+});
+
+test('isOdd operation #1', () => {
+  const a = 3;
+  expect(isOdd(a)).toEqual(true);
+});
+
+test('isOdd operation #2', () => {
+  const a = 22;
+  expect(isOdd(a)).toEqual(false);
+});
+
+// needs input validation 
+test('isOdd operation #3', () => {
+  const a = "odd";
+  expect(isOdd(a)).toEqual(true);
+});
+
+// needs input validation 
+test('isOdd operation #4', () => {
+  const a = "even";
+  expect(isOdd(a)).toEqual(true);
+});
+
