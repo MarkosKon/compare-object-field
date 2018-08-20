@@ -15,7 +15,7 @@ const compareFieldToValue = operation => field => value => object => operation(
 );
 
 /**
- * Predefined useful operations. You can always create your own.
+ * Predefined operations.
  */
 const equals = (a, b) => a === b;
 const notEquals = (a, b) => a !== b;
@@ -32,17 +32,17 @@ const isEven = a => a % 2 === 0;
 const isOdd = a => a % 2 !== 0;
 
 /**
- * This method assumes that operations is an object like the following:
+ * This method assumes that an operations object has the following structure:
  * const operations = {
  *   EQUALS: equals (function),
  *   GREATER_THAN: greaterThan(function)
  * }
  *
- * and filters is an array of objects like the following:
+ * and filters is an array of objects with the following structure:
  * const filter = {
- *   operation: 'EQUALS', (a field name from operations)
- *   field: 'cost', (a field name from the object)
- *   value: 30 (a field value from the object)
+ *   operation: 'EQUALS', (a field NAME from OPERATIONS)
+ *   field: 'cost', (a field NAME from the OBJECT)
+ *   value: 30 (a field VALUE from the OBJECT)
  * }
  * @param {Object} operations
  * @param {Array} filters
