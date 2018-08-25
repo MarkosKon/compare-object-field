@@ -6,18 +6,16 @@
 
 `npm i compare-object-field`
 
-## Example usage
+## Examples
 
 ### 1. Generic form
 
 ```
-// See a use case for this later in the document.
 import compareFieldToValue, { equals } from 'compare-object-field';
 
 const person = { name: 'John' };
 compareFieldToValue(equals)('name')('John')(person); // true
 ```
-
 ### 2. Creating new functions
 
 ```
@@ -48,6 +46,38 @@ const fieldLessThan = compareFieldToValue(lessThan); // We can use it later on o
 const costLessThan200 = fieldLessThan('cost')(200);
 
 const productsUnder200 = products.filter(costLessThan200); // results to: [{name: 'Xiaomi Redmi Note 5', brand: 'Xiaomi', cost: 180}]
+```
+
+
+### 3. Filtering arrays of objects
+
+For context see "A use case for the generic form" section.
+
+**Problem:**  We end up with some **filters** and we want to **apply them** to the products from example 2. 
+```
+
+const currentFilters = [
+  { field: 'year', operation: 'EQUALS', value: 2016 },
+  { field: 'cost', operation: 'GREATER_THAN', value: 500 },
+];
+```
+**Solution:** We initialize the operations and then each time we want the resulting products we apply the filters:
+```
+import { greaterThan, equals, initializeOperations } from "compare-object-field"
+
+// a) We initialize and save for later.
+// First we map the operation names.
+const operations = {
+    EQUALS: equals,
+    GREATER_THAN: greaterThan,
+};
+// Then we initialize the operations.
+const addFilters = initializeOperations(operations); 
+
+// b) Finally we call the following lines every time we want to search with different filters.
+const allFiltersTrue = true;
+const satisfiesFilters = addFilters(currentFilters, allFiltersTrue);
+const badPurchase = products.filter(satisfiesFilters);
 ```
 
 ## The actual function:

@@ -1,6 +1,6 @@
 {
   "name": "compare-object-field",
-  "version": "0.1.0",
+  "version": "1.1.0",
   "description": "A tiny function that compares an object's field with a value.",
   "main": "dist/index.js",
   "scripts": {
