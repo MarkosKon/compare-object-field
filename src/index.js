@@ -32,18 +32,8 @@ const isEven = a => a % 2 === 0;
 const isOdd = a => a % 2 !== 0;
 
 /**
- * This method assumes that an operations object has the following structure:
- * const operations = {
- *   EQUALS: equals (function),
- *   GREATER_THAN: greaterThan(function)
- * }
- *
- * and filters is an array of objects with the following structure:
- * const filter = {
- *   operation: 'EQUALS', (a field NAME from OPERATIONS)
- *   field: 'cost', (a field NAME from the OBJECT)
- *   value: 30 (a field VALUE from the OBJECT)
- * }
+ * Compares objects with an array of filters. The filters can have
+ * AND or OR between them. See the documentation for an example.
  * @param {Object} operations
  * @param {Array} filters
  * @param {boolean} satisfyAllFilters
@@ -65,30 +55,39 @@ const initializeOperations = operations => (filters, satisfyAllFilters = true) =
 };
 
 const isGroup = compareFieldToValue(equals)('type')('GROUP');
-const isAND = compareFieldToValue(equals)('operator')('AND');
+const isANDGroup = compareFieldToValue(equals)('operator')('AND');
 
-const addOperations = operations => initialGroup => (object) => {
-  const evaluate = (result, filter, hasANDOperator) => {
+/**
+ * Compares objects with a filter group. The filter group can have filters
+ * or other filter groups as children. Additionally the filter group can have
+ * AND or OR between the children. See the documentation for an example.
+ * @param {Object} operations
+ * @param {Object} parentGroup
+ * @param {Object} object
+ */
+const initializeOperationsG = operations => parentGroup => (object) => {
+  const evaluateFilter = (result, filter, parentIsANDGroup) => {
     const objectSatisfiesFilter = compareFieldToValue(operations[filter.operation])(filter.field)(
       filter.value,
     )(object);
-    if (hasANDOperator) return result && objectSatisfiesFilter;
+    if (parentIsANDGroup) return result && objectSatisfiesFilter;
     return result || objectSatisfiesFilter;
   };
 
-  const calculate = hasANDOperator => (result, nextFilterThing) => {
-    if (isGroup(nextFilterThing)) {
-      const aThing = nextFilterThing.children.reduce(
-        calculate(isAND(nextFilterThing)),
-        isAND(nextFilterThing),
+  const evaluateChildren = parentIsANDGroup => (result, next) => {
+    if (isGroup(next)) {
+      const groupIsANDGroup = isANDGroup(next);
+      const evaluateMoreChildren = next.children.reduce(
+        evaluateChildren(groupIsANDGroup),
+        groupIsANDGroup,
       );
-      return hasANDOperator ? result && aThing : result || aThing;
+      return parentIsANDGroup ? result && evaluateMoreChildren : result || evaluateMoreChildren;
     }
-    return evaluate(result, nextFilterThing, hasANDOperator);
+    return evaluateFilter(result, next, parentIsANDGroup);
   };
 
-  const verdict = initialGroup.children.reduce(calculate(isAND(initialGroup)), isAND(initialGroup));
-  return verdict;
+  const parentIsANDGroup = isANDGroup(parentGroup);
+  return parentGroup.children.reduce(evaluateChildren(parentIsANDGroup), parentIsANDGroup);
 };
 
 export default compareFieldToValue;
@@ -108,5 +107,5 @@ export {
   isEven,
   isOdd,
   initializeOperations,
-  addOperations,
+  initializeOperationsG,
 };

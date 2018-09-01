@@ -1,6 +1,6 @@
 # Compare object field to value
 
-> A tiny function that compares an object's field with a value (or just checks the field).
+> A small library with a function that compares an object's field with a value and two others that use the previous to filter arrays of objects.
 
 ## Installation
 
@@ -16,6 +16,7 @@ import compareFieldToValue, { equals } from 'compare-object-field';
 const person = { name: 'John' };
 compareFieldToValue(equals)('name')('John')(person); // true
 ```
+
 ### 2. Creating new functions
 
 ```
@@ -48,20 +49,21 @@ const costLessThan200 = fieldLessThan('cost')(200);
 const productsUnder200 = products.filter(costLessThan200); // results to: [{name: 'Xiaomi Redmi Note 5', brand: 'Xiaomi', cost: 180}]
 ```
 
-
 ### 3. Filtering arrays of objects
 
-For context see "A use case for the generic form" section.
+For more context see "A use case for the generic form" section.
 
-**Problem:**  We end up with some **filters** and we want to **apply them** to the products from example 2. 
+**Problem:** We end up with some **filters** and we want to **apply them** to the products from example 2.
+
 ```
-
 const currentFilters = [
   { field: 'year', operation: 'EQUALS', value: 2016 },
   { field: 'cost', operation: 'GREATER_THAN', value: 500 },
 ];
 ```
-**Solution:** We initialize the operations and then each time we want the resulting products we apply the filters:
+
+**Solution:** We initialize the operations (by using the implemented method) and then each time we want the resulting products we apply the filters:
+
 ```
 import { greaterThan, equals, initializeOperations } from "compare-object-field"
 
@@ -72,12 +74,65 @@ const operations = {
     GREATER_THAN: greaterThan,
 };
 // Then we initialize the operations.
-const addFilters = initializeOperations(operations); 
+const addFilters = initializeOperations(operations);
 
 // b) Finally we call the following lines every time we want to search with different filters.
 const allFiltersTrue = true;
 const satisfiesFilters = addFilters(currentFilters, allFiltersTrue);
 const badPurchase = products.filter(satisfiesFilters);
+```
+
+### 4. Filtering arrays of objects (another way)
+
+In this example we have a **filter group** which is an object that can have filters or other filter groups as children. The filter group also defines if all it's children must be true or just one (AND, OR).
+
+```
+// We want Xiaomi or Samsung phones that cost under 200.
+// More specifically: (brand === "Xiaomi" OR brand === "Samsung") AND cost < 200.
+const filterGroup = {
+    type: "GROUP",
+    operator: "AND",
+    children: [
+      {
+        type: "FILTER",
+        field: "cost",
+        operation: "LESS_THAN",
+        value: 200
+      },
+      {
+        type: "GROUP",
+        operator: "OR",
+        children: [
+          {
+            type: "FILTER",
+            field: "brand",
+            operation: "EQUALS",
+            value: "Samsung"
+          },
+          {
+            type: "FILTER",
+            field: "brand",
+            operation: "EQUALS",
+            value: "Xiaomi"
+          }
+        ]
+      }
+    ]
+  }
+```
+\*the **products** are from example 2.
+```
+import { equals, lessThan, initializeOperationsG } from "compare-object-field";
+
+// Again, we save operations and addFilterGroup for later.
+const operations = {
+  EQUALS: equals,
+  LESS_THAN: lessThan,
+};
+const addFilterGroup = initializeOperationsG(operations);
+
+const satisfiesFilterGroup = addFilterGroup(filterGroup);
+const xiaomiOrSamsungUnder200 = products.filter(satisfiesFilterGroup); // Xiaomi Redmi Note 5.
 ```
 
 ## The actual function:
@@ -148,20 +203,21 @@ const satisfiesAllFilters = (product, filters) => filters.reduce(
     : false),
   true,
 );
-
 ```
+
 And finally to get our result:
 
 ```
 const badPurchase = products.filter(product => satisfiesAllFilters(product, currentFilters));
 ```
 
-or you can use the **implemented method**: 
+or you can use the **implemented method**:
+
 ```
 import { initializeOperations } from "compare-object-field"
 
 // we save this as a global variable along with the operations.
-const addFilters = initializeOperations(operations); 
+const addFilters = initializeOperations(operations);
 
 // The following lines will be called every time we want to search with different filters.
 const allFiltersTrue = true;
@@ -170,6 +226,7 @@ const badPurchase = products.filter(satisfiesFilters);
 ```
 
 which results to:
+
 ```
 [
   {
@@ -187,4 +244,4 @@ which results to:
 - More expressive and easier to read code.
 - Easier to test.
 
-> Disclaimer: Probably all this is b******t and there's a design pattern that does the same thing better. :D
+> Disclaimer: Probably all this is b**\*\***t and there's a library or a design pattern that does the same thing better, but i wanted to share.

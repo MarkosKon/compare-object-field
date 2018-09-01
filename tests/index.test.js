@@ -1,6 +1,6 @@
 import compareFieldToValue, {
   initializeOperations,
-  addOperations,
+  initializeOperationsG,
   equals,
   notEquals,
   greaterThan,
@@ -144,13 +144,64 @@ test('README example #3 (with implemented method)', () => {
   ]);
 });
 
+test('README example #4', () => {
+  const filterGroup = {
+    type: "GROUP",
+    operator: "AND",
+    children: [
+      {
+        type: "FILTER",
+        field: "cost",
+        operation: "LESS_THAN",
+        value: 200
+      },
+      {
+        type: "GROUP",
+        operator: "OR",
+        children: [
+          {
+            type: "FILTER",
+            field: "brand",
+            operation: "EQUALS",
+            value: "Samsung"
+          },
+          {
+            type: "FILTER",
+            field: "brand",
+            operation: "EQUALS",
+            value: "Xiaomi"
+          }
+        ]
+      }
+    ]
+  }
+
+  const operations = {
+    EQUALS: equals,
+    LESS_THAN: lessThan,
+  };
+
+  const addFilterGroup = initializeOperationsG(operations);
+  const satisfiesFilterGroup = addFilterGroup(filterGroup);
+  const xiaomiOrSamsungUnder200 = products.filter(satisfiesFilterGroup);
+
+  expect(xiaomiOrSamsungUnder200).toEqual([
+    {
+      name: 'Xiaomi Redmi Note 5',
+      brand: 'Xiaomi',
+      cost: 180,
+      year: 2018,
+    },
+  ]);
+});
+
 const operations = {
   EQUALS: equals,
   NOT_EQUALS: notEquals,
   GREATER_THAN: greaterThan,
   INCLUDES: includes,
 };
-const addFilterGroup = addOperations(operations);
+const addFilterGroup = initializeOperationsG(operations);
 
 it('filterGroup test #1: Filter the standard Druid cards.', () => {
   const filterGroup = filterGroups[0];
