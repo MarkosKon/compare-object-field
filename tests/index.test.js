@@ -1,5 +1,6 @@
 import compareFieldToValue, {
   initializeOperations,
+  addOperations,
   equals,
   notEquals,
   greaterThan,
@@ -14,6 +15,8 @@ import compareFieldToValue, {
   isEven,
   isOdd,
 } from '../src/index';
+import cards from './data/hearthstone-cards.json';
+import filterGroups from './data/filter-groups.json';
 
 const products = [
   {
@@ -141,6 +144,42 @@ test('README example #3 (with implemented method)', () => {
   ]);
 });
 
+const operations = {
+  EQUALS: equals,
+  NOT_EQUALS: notEquals,
+  GREATER_THAN: greaterThan,
+  INCLUDES: includes,
+};
+const addFilterGroup = addOperations(operations);
+
+it('filterGroup test #1: Filter the standard Druid cards.', () => {
+  const filterGroup = filterGroups[0];
+  const filterCards = addFilterGroup(filterGroup);
+  const standardDruidCards = cards.filter(filterCards);
+  expect(standardDruidCards.length).toEqual(448);
+});
+
+it('filterGroup test #2: Filter the standard Neutral cards', () => {
+  const filterGroup = filterGroups[1];
+  const filterCards = addFilterGroup(filterGroup);
+  const standardNeutral = cards.filter(filterCards);
+  expect(standardNeutral.length).toEqual(373);
+});
+
+it('filterGroup test #3: Filter Whizbang', () => {
+  const filterGroup = filterGroups[2];
+  const filterCards = addFilterGroup(filterGroup);
+  const whizbang = cards.filter(filterCards);
+  expect(whizbang.length).toEqual(1);
+});
+
+it('filterGroup test #4: Available cards for Prince Keleseth', () => {
+  const filterGroup = filterGroups[3];
+  const filterCards = addFilterGroup(filterGroup);
+  const princeKelesethCards = cards.filter(filterCards);
+  expect(princeKelesethCards.length).toEqual(1420);
+});
+
 test('equals operation #1', () => {
   const a = 1;
   const b = 1;
@@ -233,7 +272,7 @@ test('lessThan operation #3', () => {
 
 test('lessThan operation #4', () => {
   const a = [1, 2];
-  const b = ["1", "2", "3"];
+  const b = ['1', '2', '3'];
   expect(lessThan(a, b)).toEqual(true);
 });
 
@@ -292,7 +331,7 @@ test('isIncludedIn operation #2', () => {
 });
 
 test('isIncludedIn operation #3', () => {
-  const a = "a";
+  const a = 'a';
   const b = [1, 2, 3];
   expect(isIncludedIn(a, b)).toEqual(false);
 });
@@ -316,7 +355,7 @@ test('notIncludedIn operation #2', () => {
 });
 
 test('notIncludedIn operation #3', () => {
-  const a = "a";
+  const a = 'a';
   const b = [1, 2, 3];
   expect(notIncludedIn(a, b)).toEqual(true);
 });
@@ -328,73 +367,73 @@ test('notIncludedIn operation #4', () => {
 });
 
 test('match operation #1', () => {
-  const a = "My name is Mark";
+  const a = 'My name is Mark';
   const b = 'Mark';
   expect(match(a, b)).toEqual(true);
 });
 
 test('match operation #2', () => {
-  const a = "My name is Mark";
+  const a = 'My name is Mark';
   const b = 'Jack';
   expect(match(a, b)).toEqual(false);
 });
 
 test('match operation #3', () => {
-  const a = "My name is Mark";
+  const a = 'My name is Mark';
   const b = '\\d+';
   expect(match(a, b)).toEqual(false);
 });
 
 test('match operation #4', () => {
-  const a = "My name is Mark";
+  const a = 'My name is Mark';
   const b = '\\w+';
   expect(match(a, b)).toEqual(true);
 });
 
 test('match operation #5', () => {
-  const a = "1";
+  const a = '1';
   const b = '\\d+';
   expect(match(a, b)).toEqual(true);
 });
 
 test('notMatch operation #1', () => {
-  const a = "My name is Mark";
+  const a = 'My name is Mark';
   const b = 'Mark';
   expect(notMatch(a, b)).toEqual(false);
 });
 
 test('notMatch operation #2', () => {
-  const a = "My name is Mark";
+  const a = 'My name is Mark';
   const b = 'Jack';
   expect(notMatch(a, b)).toEqual(true);
 });
 
 test('notMatch operation #3', () => {
-  const a = "My name is Mark";
+  const a = 'My name is Mark';
   const b = '\\d+';
   expect(notMatch(a, b)).toEqual(true);
 });
 
 test('notMatch operation #4', () => {
-  const a = "My name is Mark";
+  const a = 'My name is Mark';
   const b = '\\w+';
   expect(notMatch(a, b)).toEqual(false);
 });
 
 test('notMatch operation #5', () => {
-  const a = "1";
+  const a = '1';
   const b = '\\d+';
   expect(notMatch(a, b)).toEqual(false);
 });
 
 test('matchCaseSensitive operation #1', () => {
-  const a = "John doe";
+  const a = 'John doe';
   const b = 'john';
   expect(matchCaseSensitive(a, b)).toEqual(false);
 });
 
 test('matchCaseSensitive operation #2', () => {
-  const a = "John doe";
+  const a = 'John doe';
   const b = 'John';
   expect(matchCaseSensitive(a, b)).toEqual(true);
 });
@@ -439,15 +478,14 @@ test('isOdd operation #2', () => {
   expect(isOdd(a)).toEqual(false);
 });
 
-// needs input validation 
+// needs input validation
 test('isOdd operation #3', () => {
-  const a = "odd";
+  const a = 'odd';
   expect(isOdd(a)).toEqual(true);
 });
 
-// needs input validation 
+// needs input validation
 test('isOdd operation #4', () => {
-  const a = "even";
+  const a = 'even';
   expect(isOdd(a)).toEqual(true);
 });
-

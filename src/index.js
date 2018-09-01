@@ -64,6 +64,33 @@ const initializeOperations = operations => (filters, satisfyAllFilters = true) =
   return satisfyAllFilters ? allFiltersTrue : oneFilterTrue;
 };
 
+const isGroup = compareFieldToValue(equals)('type')('GROUP');
+const isAND = compareFieldToValue(equals)('operator')('AND');
+
+const addOperations = operations => initialGroup => (object) => {
+  const evaluate = (result, filter, hasANDOperator) => {
+    const objectSatisfiesFilter = compareFieldToValue(operations[filter.operation])(filter.field)(
+      filter.value,
+    )(object);
+    if (hasANDOperator) return result && objectSatisfiesFilter;
+    return result || objectSatisfiesFilter;
+  };
+
+  const calculate = hasANDOperator => (result, nextFilterThing) => {
+    if (isGroup(nextFilterThing)) {
+      const aThing = nextFilterThing.children.reduce(
+        calculate(isAND(nextFilterThing)),
+        isAND(nextFilterThing),
+      );
+      return hasANDOperator ? result && aThing : result || aThing;
+    }
+    return evaluate(result, nextFilterThing, hasANDOperator);
+  };
+
+  const verdict = initialGroup.children.reduce(calculate(isAND(initialGroup)), isAND(initialGroup));
+  return verdict;
+};
+
 export default compareFieldToValue;
 
 export {
@@ -81,4 +108,5 @@ export {
   isEven,
   isOdd,
   initializeOperations,
+  addOperations,
 };

@@ -1,0 +1,88 @@
+[
+  {
+    "type": "GROUP",
+    "operator": "AND",
+    "howMany": null,
+    "children": [
+      {
+        "type": "FILTER",
+        "field": "set",
+        "operation": "GREATER_THAN",
+        "value": 8
+      },
+      {
+        "type": "GROUP",
+        "operator": "OR",
+        "howMany": null,
+        "children": [
+          {
+            "type": "FILTER",
+            "field": "cardClass",
+            "operation": "INCLUDES",
+            "value": "NEUTRAL"
+          },
+          {
+            "type": "FILTER",
+            "field": "cardClass",
+            "operation": "INCLUDES",
+            "value": "DRUID"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "operator": "AND",
+    "minCards": 2,
+    "maxCards": 4,
+    "children": [
+      {
+        "type": "FILTER",
+        "field": "set",
+        "operation": "GREATER_THAN",
+        "value": 8
+      },
+      {
+        "type": "FILTER",
+        "field": "cardClass",
+        "operation": "INCLUDES",
+        "value": "NEUTRAL"
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "operator": "AND",
+    "minCards": 2,
+    "maxCards": 4,
+    "children": [
+      {
+        "type": "FILTER",
+        "field": "name",
+        "operation": "EQUALS",
+        "value": "Whizbang the Wonderful"
+      }
+    ]
+  },
+  {
+    "type": "GROUP",
+    "operator": "OR",
+    "minCards": 2,
+    "maxCards": 4,
+    "children": [
+      {
+        "type": "FILTER",
+        "field": "name",
+        "operation": "EQUALS",
+        "value": "Prince Keleseth"
+      },
+      {
+        "type": "FILTER",
+        "field": "cost",
+        "operation": "NOT_EQUALS",
+        "value": 2
+      }
+    ]
+  }
+]
