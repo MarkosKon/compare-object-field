@@ -1,6 +1,6 @@
 {
   "name": "compare-object-field",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A small library with a function that compares an object's field with a value and two others that use the previous to filter arrays of objects.",
   "main": "dist/index.js",
   "scripts": {
