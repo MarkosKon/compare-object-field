@@ -1,7 +1,7 @@
 {
   "name": "compare-object-field",
   "version": "1.2.0",
-  "description": "A small library with utilities that compare an object's field with a value and filter arrays of objects.",
+  "description": "A small library with a function that compares an object's field with a value and two others that use the previous to filter arrays of objects.",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src -d dist",
@@ -15,6 +15,14 @@
     "lint",
     "test"
   ],
+  "keywords": [
+    "compare object field",
+    "filter arrays"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarkosKon/compare-object-field.git"
+  },
   "jest": {
     "verbose": true,
     "testEnvironment": "node",
