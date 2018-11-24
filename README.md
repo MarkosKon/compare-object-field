@@ -1,6 +1,6 @@
 # Compare object field to value
 
-> A small library with a function that compares an object's field with a value and two others that use the previous to filter arrays of objects.
+> A small library with a function that compares an **object's field** with a **value**. Also includes two other functions that use the previous to **filter arrays of objects**, based on a **filter object**.
 
 ## Installation
 
@@ -10,138 +10,160 @@
 
 ### 1. Generic form
 
-```
-import compareFieldToValue, { equals } from 'compare-object-field';
+(the most boring)
 
-const person = { name: 'John' };
-compareFieldToValue(equals)('name')('John')(person); // true
+```js
+import compareFieldToValue, { equals } from "compare-object-field";
+
+const person = { name: "John" };
+compareFieldToValue(equals)("name")("John")(person); // true
 ```
 
 ### 2. Creating new functions
 
-```
-// This is for a more functional style.
-import compareFieldToValue, { lessThan } from 'compare-object-field';
+(go all in on functional programming)
+
+```js
+// By taking advantage of the "currying" of compareFieldToValue,
+// you can make your code more functional by creating new functions
+// when you want to compare something.
+import compareFieldToValue, { lessThan } from "compare-object-field";
 
 const products = [
   {
-    name: 'Xiaomi Redmi Note 5',
-    brand: 'Xiaomi',
+    name: "Xiaomi Redmi Note 5",
+    brand: "Xiaomi",
     cost: 180,
-    year: 2018,
+    year: 2018
   },
   {
-    name: 'Samsung Galaxy S8',
-    brand: 'Samsung',
+    name: "Samsung Galaxy S8",
+    brand: "Samsung",
     cost: 450,
-    year: 2017,
+    year: 2017
   },
   {
-    name: 'Apple iPhone 7',
-    brand: 'Apple',
+    name: "Apple iPhone 7",
+    brand: "Apple",
     cost: 513,
-    year: 2016,
-  },
+    year: 2016
+  }
 ];
-const fieldLessThan = compareFieldToValue(lessThan); // We can use it later on other objects or different fields.
-const costLessThan200 = fieldLessThan('cost')(200);
+const fieldLessThan = compareFieldToValue(lessThan);
+// We can use the "fieldLessThan" function later on
+// other objects or different fields.
+const costLessThan200 = fieldLessThan("cost")(200);
 
-const productsUnder200 = products.filter(costLessThan200); // results to: [{name: 'Xiaomi Redmi Note 5', brand: 'Xiaomi', cost: 180}]
+const productsUnder200 = products.filter(costLessThan200);
+// results to: [{name: 'Xiaomi Redmi Note 5', brand: 'Xiaomi', cost: 180}]
 ```
 
 ### 3. Filtering arrays of objects
 
+(the main reason for writing the library)
+
 For more context see "A use case for the generic form" section.
 
-**Problem:** We end up with some **filters** and we want to **apply them** to the products from example 2.
+**Problem:** We end up with some **filters** and we want to **apply them** to the products from [example 2](#2-creating-new-functions) and get back only the products that satisfy those filters.
 
-```
+```js
+// The filters...
 const currentFilters = [
-  { field: 'year', operation: 'EQUALS', value: 2016 },
-  { field: 'cost', operation: 'GREATER_THAN', value: 500 },
+  { field: "year", operation: "EQUALS", value: 2016 },
+  { field: "cost", operation: "GREATER_THAN", value: 500 }
 ];
 ```
 
-**Solution:** We initialize the operations (by using the implemented method) and then each time we want the resulting products we apply the filters:
+**Solution:** We initialize the operations (by using the implemented method) and then each time we want the resulting products we apply the filters. Consider the following code, it's easier than it sounds:
 
-```
-import { greaterThan, equals, initializeOperations } from "compare-object-field"
+```js
+import {
+  greaterThan,
+  equals,
+  initializeOperations
+} from "compare-object-field";
 
 // a) We initialize and save for later.
-// First we map the operation names.
+// First we map the operation names to the
+// names of our filter objects:
 const operations = {
-    EQUALS: equals,
-    GREATER_THAN: greaterThan,
+  EQUALS: equals,
+  GREATER_THAN: greaterThan
 };
 // Then we initialize the operations.
 const addFilters = initializeOperations(operations);
 
-// b) Finally we call the following lines every time we want to search with different filters.
-const allFiltersTrue = true;
+// b) Finally, we call the following lines every time
+// we want to search with different filters.
+const allFiltersTrue = true; // = AND operator between filters...
 const satisfiesFilters = addFilters(currentFilters, allFiltersTrue);
 const badPurchase = products.filter(satisfiesFilters);
 ```
 
 ### 4. Filtering arrays of objects (another way)
 
-In this example we have a **filter group** which is an object that can have filters or other filter groups as children. The filter group also defines if all it's children must be true or just one (AND, OR).
+In this example, we have a **filter group** which is an object that can have filters or other filter groups as children. The filter group also defines if all it's children must be true or just one (AND, OR).
 
-```
+```js
 // We want Xiaomi or Samsung phones that cost under 200.
 // More specifically: (brand === "Xiaomi" OR brand === "Samsung") AND cost < 200.
 const filterGroup = {
-    type: "GROUP",
-    operator: "AND",
-    children: [
-      {
-        type: "FILTER",
-        field: "cost",
-        operation: "LESS_THAN",
-        value: 200
-      },
-      {
-        type: "GROUP",
-        operator: "OR",
-        children: [
-          {
-            type: "FILTER",
-            field: "brand",
-            operation: "EQUALS",
-            value: "Samsung"
-          },
-          {
-            type: "FILTER",
-            field: "brand",
-            operation: "EQUALS",
-            value: "Xiaomi"
-          }
-        ]
-      }
-    ]
-  }
+  type: "GROUP",
+  operator: "AND",
+  children: [
+    {
+      type: "FILTER",
+      field: "cost",
+      operation: "LESS_THAN",
+      value: 200
+    },
+    {
+      type: "GROUP",
+      operator: "OR",
+      children: [
+        {
+          type: "FILTER",
+          field: "brand",
+          operation: "EQUALS",
+          value: "Samsung"
+        },
+        {
+          type: "FILTER",
+          field: "brand",
+          operation: "EQUALS",
+          value: "Xiaomi"
+        }
+      ]
+    }
+  ]
+};
 ```
-\*the **products** are from example 2.
-```
+
+\*the **products** array is from [example 2](#2-creating-new-functions).
+
+```js
 import { equals, lessThan, initializeOperationsG } from "compare-object-field";
 
-// Again, we save operations and addFilterGroup for later.
+// Again, we save the operations and addFilterGroup for more
+// filtering later in our application.
 const operations = {
   EQUALS: equals,
-  LESS_THAN: lessThan,
+  LESS_THAN: lessThan
 };
 const addFilterGroup = initializeOperationsG(operations);
 
+// Then we "add" the current filter group.
 const satisfiesFilterGroup = addFilterGroup(filterGroup);
-const xiaomiOrSamsungUnder200 = products.filter(satisfiesFilterGroup); // Xiaomi Redmi Note 5.
+// Finally, we get the products we want.
+const xiaomiOrSamsungUnder200 = products.filter(satisfiesFilterGroup);
+// results to: Xiaomi Redmi Note 5.
 ```
 
 ## The actual function:
 
-```
-const compareFieldToValue = operation => field => value => object => operation(
-  object[field],
-  value,
-);
+```js
+const compareFieldToValue = operation => field => value => object =>
+  operation(object[field], value);
 ```
 
 It compares an object's field to a value and returns true or false. It's a curried function that takes 4 arguments.
@@ -170,51 +192,58 @@ It compares an object's field to a value and returns true or false. It's a curri
 
 ## A use case for the generic form
 
+(This is basically the [example 3](#3-filtering-arrays-of-objects) but with more details)
 Say we have the previous array of products and we want to filter them based on some filters. Those filters can be as **many** as the different field values of the products. They could be **stored** in a database or be **dynamically generated**. So for example we may end up with the following filters:
 
-```
+```js
 const currentFilters = [
-  { field: 'year', operation: 'EQUALS', value: 2016 },
-  { field: 'cost', operation: 'GREATER_THAN', value: 500 },
+  { field: "year", operation: "EQUALS", value: 2016 },
+  { field: "cost", operation: "GREATER_THAN", value: 500 }
 ];
 ```
 
-We start by importing the required functions:
+In order to filter our products, we start by importing the required functions:
 
-```
-import compareFieldToValue, { greaterThan, equals } from 'compare-object-field'
+```js
+import compareFieldToValue, { greaterThan, equals } from "compare-object-field";
 ```
 
-Then we "change" the names of the operations we imported to the names of the operations from the data and store them as a global variable.
+Then we "change" the names of the operations we imported, to the names of the operations from the data and store them as a global variable.
 
-```
+```js
 const operations = {
-    EQUALS: equals,
-    GREATER_THAN: greaterThan,
+  EQUALS: equals,
+  GREATER_THAN: greaterThan
 };
 ```
 
 Then we assume that all the filters must be true (AND logical operator). So we create a method that will compare a filter array against a product.
 
-```
-const satisfiesAllFilters = (product, filters) => filters.reduce(
-  (result, filter) => (result
-    ? compareFieldToValue(operations[filter.operation])(filter.field)(filter.value)(product)
-    : false),
-  true,
-);
+```js
+const satisfiesAllFilters = (product, filters) =>
+  filters.reduce(
+    (result, filter) =>
+      result
+        ? compareFieldToValue(operations[filter.operation])(filter.field)(
+            filter.value
+          )(product)
+        : false,
+    true
+  );
 ```
 
 And finally to get our result:
 
-```
-const badPurchase = products.filter(product => satisfiesAllFilters(product, currentFilters));
+```js
+const badPurchase = products.filter(product =>
+  satisfiesAllFilters(product, currentFilters)
+);
 ```
 
-or you can use the **implemented method**:
+or you can just use the **implemented method**, we saw in [example 3](#3-filtering-arrays-of-objects):
 
-```
-import { initializeOperations } from "compare-object-field"
+```js
+import { initializeOperations } from "compare-object-field";
 
 // we save this as a global variable along with the operations.
 const addFilters = initializeOperations(operations);
@@ -227,15 +256,15 @@ const badPurchase = products.filter(satisfiesFilters);
 
 which results to:
 
-```
+```js
 [
   {
-    name: 'Apple iPhone 7',
-    brand: 'Apple',
+    name: "Apple iPhone 7",
+    brand: "Apple",
     cost: 513,
-    year: 2016,
-  },
-]
+    year: 2016
+  }
+];
 ```
 
 ## Benefits
@@ -244,4 +273,8 @@ which results to:
 - More expressive and easier to read code.
 - Easier to test.
 
-> Disclaimer: Probably all this is b**\*\***t and there's a library or a design pattern that does the same thing better, but i wanted to share.
+> Disclaimer: Probably all this is b**\*\***t and there's a library or a design pattern that does the same thing better, but I wanted to share.
+
+**Update**:
+[Algolia](https://www.algolia.com/) can provide the same and much more search related functionality.
+If you have another small library in mind that is used for filtering array of objects, please let me know by [leaving me a message](https://mkdevdiary.netlify.com/contact). Thanks!

@@ -1,6 +1,6 @@
 {
   "name": "compare-object-field",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A small library with a function that compares an object's field with a value and two others that use the previous to filter arrays of objects.",
   "main": "dist/index.js",
   "scripts": {
@@ -38,10 +38,10 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "eslint": "^5.3.0",
+    "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "jest": "^23.5.0",
+    "jest": "^23.6.0",
     "pre-commit": "^1.2.2"
   }
 }
