@@ -156,7 +156,9 @@ const satisfiesFilterGroup = addFilterGroup(filterGroup);
 const xiaomiOrSamsungUnder200 = products.filter(satisfiesFilterGroup);
 // results to: Xiaomi Redmi Note 5.
 ```
+
 ## Looking at the source code
+
 ### The actual function:
 
 ```js
@@ -168,20 +170,20 @@ It compares an object's field to a value and returns true or false. It's a curri
 
 - The **operation** which is a **function** that you can import (import { operationName } from "compare-object-field"), or create your own. It basically compares two things and returns true or false. The available operations are:
 
-```
-    * equals = (a, b) => a === b;
-    * notEquals = (a, b) => a !== b;
-    * greaterThan = (a, b) => a > b;
-    * lessThan = (a, b) => a < b;
-    * includes = (a, b) => a.includes(b);
-    * notIncludes = (a, b) => !a.includes(b);
-    * isIncludedIn = (a, b) => b.includes(a);
-    * notIncludedIn = (a, b) => !b.includes(a);
-    * match = (a, b) => !!a.match(new RegExp(b, 'gi'));
-    * notMatch = (a, b) => !a.match(new RegExp(b, 'gi'));
-    * matchCaseSensitive = (a, b) => !!a.match(new RegExp(b, 'g'));
-    * isEven = a => a % 2 === 0;
-    * isOdd = a => a % 2 !== 0;
+```js
+- equals = (a, b) => a === b;
+- notEquals = (a, b) => a !== b;
+- greaterThan = (a, b) => a > b;
+- lessThan = (a, b) => a < b;
+- includes = (a, b) => a.includes(b);
+- notIncludes = (a, b) => !a.includes(b);
+- isIncludedIn = (a, b) => b.includes(a);
+- notIncludedIn = (a, b) => !b.includes(a);
+- match = (a, b) => !!a.match(new RegExp(b, "gi"));
+- notMatch = (a, b) => !a.match(new RegExp(b, "gi"));
+- matchCaseSensitive = (a, b) => !!a.match(new RegExp(b, "g"));
+- isEven = a => a % 2 === 0;
+- isOdd = a => a % 2 !== 0;
 ```
 
 - The object's **field name** which is a **string**. For example 'cost' for product.cost.
@@ -191,6 +193,7 @@ It compares an object's field to a value and returns true or false. It's a curri
 ### A use case for the generic form
 
 (This is basically the [example 3](#3-filtering-arrays-of-objects) but with more details)
+
 Say we have the previous array of products and we want to filter them based on some filters. Those filters can be as **many** as the different field values of the products. They could be **stored** in a database or be **dynamically generated**. So for example we may end up with the following filters:
 
 ```js
