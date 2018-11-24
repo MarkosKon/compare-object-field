@@ -1,6 +1,6 @@
 # Compare object field to value
 
-> A small library with a function that compares an **object's field** with a **value**. Also includes two other functions that use the previous to **filter arrays of objects**, based on a **filter object**.
+> Compare an object's field with a value, or filter arrays of objects by a filter object.
 
 ## Installation
 
@@ -60,9 +60,7 @@ const productsUnder200 = products.filter(costLessThan200);
 
 ### 3. Filtering arrays of objects
 
-(the main reason for writing the library)
-
-For more context see "A use case for the generic form" section.
+(This and [example 4](#4-filtering-arrays-of-objects-another-way) are the main reason for writing the library)
 
 **Problem:** We end up with some **filters** and we want to **apply them** to the products from [example 2](#2-creating-new-functions) and get back only the products that satisfy those filters.
 
@@ -74,7 +72,7 @@ const currentFilters = [
 ];
 ```
 
-**Solution:** We initialize the operations (by using the implemented method) and then each time we want the resulting products we apply the filters. Consider the following code, it's easier than it sounds:
+**Solution:** We initialize the operations (by using the implemented method). Then, each time we want the resulting products we apply the filters. Consider the following code, it's easier than it sounds:
 
 ```js
 import {
@@ -84,7 +82,7 @@ import {
 } from "compare-object-field";
 
 // a) We initialize and save for later.
-// First we map the operation names to the
+// First, we map the operation names to the
 // names of our filter objects:
 const operations = {
   EQUALS: equals,
@@ -102,7 +100,7 @@ const badPurchase = products.filter(satisfiesFilters);
 
 ### 4. Filtering arrays of objects (another way)
 
-In this example, we have a **filter group** which is an object that can have filters or other filter groups as children. The filter group also defines if all it's children must be true or just one (AND, OR).
+In this example, we have a **filter group** which is an object that can have filters or other filter groups as children. The filter group also defines if all it's children must be true or just one (AND, OR). Consider the following "filter group":
 
 ```js
 // We want Xiaomi or Samsung phones that cost under 200.
@@ -158,8 +156,8 @@ const satisfiesFilterGroup = addFilterGroup(filterGroup);
 const xiaomiOrSamsungUnder200 = products.filter(satisfiesFilterGroup);
 // results to: Xiaomi Redmi Note 5.
 ```
-
-## The actual function:
+## Looking at the source code
+### The actual function:
 
 ```js
 const compareFieldToValue = operation => field => value => object =>
@@ -190,7 +188,7 @@ It compares an object's field to a value and returns true or false. It's a curri
 - The **value** you want to compare to, which can be **anything**.
 - And the actual **object**.
 
-## A use case for the generic form
+### A use case for the generic form
 
 (This is basically the [example 3](#3-filtering-arrays-of-objects) but with more details)
 Say we have the previous array of products and we want to filter them based on some filters. Those filters can be as **many** as the different field values of the products. They could be **stored** in a database or be **dynamically generated**. So for example we may end up with the following filters:
@@ -277,4 +275,4 @@ which results to:
 
 **Update**:
 [Algolia](https://www.algolia.com/) can provide the same and much more search related functionality.
-If you have another small library in mind that is used for filtering array of objects, please let me know by [leaving me a message](https://mkdevdiary.netlify.com/contact). Thanks!
+If you have another small library in mind that is used for filtering arrays of objects, please let me know by [leaving me a message](https://mkdevdiary.netlify.com/contact). Thanks!

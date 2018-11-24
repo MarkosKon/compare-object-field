@@ -1,7 +1,7 @@
 {
   "name": "compare-object-field",
   "version": "1.2.2",
-  "description": "A small library with a function that compares an object's field with a value and two others that use the previous to filter arrays of objects.",
+  "description": "Compare an object's field with a value, or filter arrays of objects by a filter object.",
   "main": "dist/index.js",
   "scripts": {
     "build": "babel src -d dist",
