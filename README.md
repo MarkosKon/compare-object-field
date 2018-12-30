@@ -13,7 +13,7 @@
 (the most boring)
 
 ```js
-import compareFieldToValue, { equals } from "compare-object-field";
+import { compareFieldToValue, equals } from "compare-object-field";
 
 const person = { name: "John" };
 compareFieldToValue(equals)("name")("John")(person); // true
@@ -27,7 +27,7 @@ compareFieldToValue(equals)("name")("John")(person); // true
 // By taking advantage of the "currying" of compareFieldToValue,
 // you can make your code more functional by creating new functions
 // when you want to compare something.
-import compareFieldToValue, { lessThan } from "compare-object-field";
+import { compareFieldToValue, lessThan } from "compare-object-field";
 
 const products = [
   {
@@ -206,7 +206,7 @@ const currentFilters = [
 In order to filter our products, we start by importing the required functions:
 
 ```js
-import compareFieldToValue, { greaterThan, equals } from "compare-object-field";
+import { compareFieldToValue, greaterThan, equals } from "compare-object-field";
 ```
 
 Then we "change" the names of the operations we imported, to the names of the operations from the data and store them as a global variable.

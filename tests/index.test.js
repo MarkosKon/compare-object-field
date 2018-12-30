@@ -1,4 +1,5 @@
-import compareFieldToValue, {
+import {
+  compareFieldToValue,
   initializeOperations,
   initializeOperationsG,
   equals,
@@ -73,9 +74,12 @@ test('README example #3 (with map)', () => {
     GREATER_THAN: greaterThan,
   };
 
-  const satisfiesAllFilters = (product, filters) => !filters
-    .map(filter => compareFieldToValue(operations[filter.operation])(filter.field)(filter.value)(product))
-    .includes(false);
+  const satisfiesAllFilters = (product, filters) =>
+    !filters
+      .map(filter =>
+        compareFieldToValue(operations[filter.operation])(filter.field)(filter.value)(product),
+      )
+      .includes(false);
 
   const badPurchase = products.filter(product => satisfiesAllFilters(product, currentFilters));
 
@@ -100,12 +104,14 @@ test('README example #3 (with reduce)', () => {
     GREATER_THAN: greaterThan,
   };
 
-  const satisfiesAllFilters = (product, filters) => filters.reduce(
-    (result, filter) => (result
-      ? compareFieldToValue(operations[filter.operation])(filter.field)(filter.value)(product)
-      : result),
-    true,
-  );
+  const satisfiesAllFilters = (product, filters) =>
+    filters.reduce(
+      (result, filter) =>
+        result
+          ? compareFieldToValue(operations[filter.operation])(filter.field)(filter.value)(product)
+          : result,
+      true,
+    );
 
   const badPurchase = products.filter(product => satisfiesAllFilters(product, currentFilters));
 
@@ -146,35 +152,35 @@ test('README example #3 (with implemented method)', () => {
 
 test('README example #4', () => {
   const filterGroup = {
-    type: "GROUP",
-    operator: "AND",
+    type: 'GROUP',
+    operator: 'AND',
     children: [
       {
-        type: "FILTER",
-        field: "cost",
-        operation: "LESS_THAN",
-        value: 200
+        type: 'FILTER',
+        field: 'cost',
+        operation: 'LESS_THAN',
+        value: 200,
       },
       {
-        type: "GROUP",
-        operator: "OR",
+        type: 'GROUP',
+        operator: 'OR',
         children: [
           {
-            type: "FILTER",
-            field: "brand",
-            operation: "EQUALS",
-            value: "Samsung"
+            type: 'FILTER',
+            field: 'brand',
+            operation: 'EQUALS',
+            value: 'Samsung',
           },
           {
-            type: "FILTER",
-            field: "brand",
-            operation: "EQUALS",
-            value: "Xiaomi"
-          }
-        ]
-      }
-    ]
-  }
+            type: 'FILTER',
+            field: 'brand',
+            operation: 'EQUALS',
+            value: 'Xiaomi',
+          },
+        ],
+      },
+    ],
+  };
 
   const operations = {
     EQUALS: equals,

@@ -2,14 +2,15 @@
   "name": "compare-object-field",
   "version": "1.2.2",
   "description": "Compare an object's field with a value, or filter arrays of objects by a filter object.",
-  "main": "dist/index.js",
+  "main": "dist/compare-object-field.cjs.js",
+  "module": "dist/compare-object-field.esm.js",
   "scripts": {
-    "build": "babel src -d dist",
-    "prepublish": "npm run lint && npm run build",
-    "lint": "./node_modules/.bin/eslint src/**/*",
-    "lint-fix": "./node_modules/.bin/eslint --fix src/**/*",
+    "build": "rm -rf dist && rollup -c",
+    "prepublish": "yarn lint && yarn build",
+    "lint": "./node_modules/.bin/eslint src",
+    "lint:fix": "./node_modules/.bin/eslint --fix src",
     "test": "jest",
-    "test-w": "jest --watch"
+    "test:w": "jest --watch"
   },
   "pre-commit": [
     "lint",
@@ -23,25 +24,29 @@
     "type": "git",
     "url": "git+https://github.com/MarkosKon/compare-object-field.git"
   },
-  "jest": {
-    "verbose": true,
-    "testEnvironment": "node",
-    "testURL": "http://localhost/",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/dist"
-    ]
-  },
   "author": "AffectionateDoor",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "babel-cli": "^6.26.0",
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
     "babel-preset-env": "^1.7.0",
-    "eslint": "^5.9.0",
+    "eslint": "^5.11.1",
     "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-config-prettier": "^3.3.0",
     "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-prettier": "^3.0.1",
     "jest": "^23.6.0",
-    "pre-commit": "^1.2.2"
+    "pre-commit": "^1.2.2",
+    "prettier": "^1.15.3",
+    "regenerator-runtime": "^0.13.1",
+    "rollup": "^1.0.0",
+    "rollup-plugin-babel": "^4.2.0",
+    "rollup-plugin-terser": "^3.0.0",
+    "rollup-plugin-uglify": "^6.0.0"
   }
 }
