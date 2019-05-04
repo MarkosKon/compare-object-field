@@ -9,7 +9,8 @@
     "lint": "eslint src/**/*",
     "lint:fix": "eslint --fix src/**/*",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "pre-commit": [
     "lint",
@@ -23,25 +24,18 @@
     "type": "git",
     "url": "git+https://github.com/MarkosKon/compare-object-field.git"
   },
-  "jest": {
-    "verbose": true,
-    "testEnvironment": "node",
-    "testURL": "http://localhost/",
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "/dist"
-    ]
-  },
   "author": "AffectionateDoor",
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
     "eslint": "^5.9.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
-    "jest": "^23.6.0",
+    "eslint-plugin-jest": "^22.5.1",
+    "jest": "^24.7.1",
     "pre-commit": "^1.2.2"
   }
 }

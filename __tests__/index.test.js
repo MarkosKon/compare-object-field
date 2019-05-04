@@ -146,35 +146,35 @@ test('README example #3 (with implemented method)', () => {
 
 test('README example #4', () => {
   const filterGroup = {
-    type: "GROUP",
-    operator: "AND",
+    type: 'GROUP',
+    operator: 'AND',
     children: [
       {
-        type: "FILTER",
-        field: "cost",
-        operation: "LESS_THAN",
-        value: 200
+        type: 'FILTER',
+        field: 'cost',
+        operation: 'LESS_THAN',
+        value: 200,
       },
       {
-        type: "GROUP",
-        operator: "OR",
+        type: 'GROUP',
+        operator: 'OR',
         children: [
           {
-            type: "FILTER",
-            field: "brand",
-            operation: "EQUALS",
-            value: "Samsung"
+            type: 'FILTER',
+            field: 'brand',
+            operation: 'EQUALS',
+            value: 'Samsung',
           },
           {
-            type: "FILTER",
-            field: "brand",
-            operation: "EQUALS",
-            value: "Xiaomi"
-          }
-        ]
-      }
-    ]
-  }
+            type: 'FILTER',
+            field: 'brand',
+            operation: 'EQUALS',
+            value: 'Xiaomi',
+          },
+        ],
+      },
+    ],
+  };
 
   const operations = {
     EQUALS: equals,
@@ -207,28 +207,28 @@ it('filterGroup test #1: Filter the standard Druid cards.', () => {
   const filterGroup = filterGroups[0];
   const filterCards = addFilterGroup(filterGroup);
   const standardDruidCards = cards.filter(filterCards);
-  expect(standardDruidCards.length).toEqual(448);
+  expect(standardDruidCards).toHaveLength(448);
 });
 
 it('filterGroup test #2: Filter the standard Neutral cards', () => {
   const filterGroup = filterGroups[1];
   const filterCards = addFilterGroup(filterGroup);
   const standardNeutral = cards.filter(filterCards);
-  expect(standardNeutral.length).toEqual(373);
+  expect(standardNeutral).toHaveLength(373);
 });
 
 it('filterGroup test #3: Filter Whizbang', () => {
   const filterGroup = filterGroups[2];
   const filterCards = addFilterGroup(filterGroup);
   const whizbang = cards.filter(filterCards);
-  expect(whizbang.length).toEqual(1);
+  expect(whizbang).toHaveLength(1);
 });
 
 it('filterGroup test #4: Available cards for Prince Keleseth', () => {
   const filterGroup = filterGroups[3];
   const filterCards = addFilterGroup(filterGroup);
   const princeKelesethCards = cards.filter(filterCards);
-  expect(princeKelesethCards.length).toEqual(1420);
+  expect(princeKelesethCards).toHaveLength(1420);
 });
 
 test('equals operation #1', () => {
