@@ -10,12 +10,21 @@
     "lint:fix": "eslint --fix src/**/*",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:staged": "jest --findRelatedTests",
     "test:coverage": "jest --coverage"
   },
-  "pre-commit": [
-    "lint",
-    "test"
-  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint",
+      "git add",
+      "yarn test:staged"
+    ]
+  },
   "keywords": [
     "compare object field",
     "filter arrays"
@@ -35,7 +44,8 @@
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^22.5.1",
+    "husky": "^2.2.0",
     "jest": "^24.7.1",
-    "pre-commit": "^1.2.2"
+    "lint-staged": "^8.1.6"
   }
 }
