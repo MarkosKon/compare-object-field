@@ -26,6 +26,8 @@ const notMatch = (a, b) => a && !a.match(new RegExp(b, 'gi'));
 const matchCaseSensitive = (a, b) => a && !!a.match(new RegExp(b, 'g'));
 const isEven = a => a % 2 === 0;
 const isOdd = a => a % 2 !== 0;
+const isNull = a => a === null;
+const isNotNull = a => a !== null;
 
 /**
  * Compares objects with an array of filters. The filters can have
@@ -96,6 +98,8 @@ export {
   matchCaseSensitive,
   isEven,
   isOdd,
+  isNull,
+  isNotNull,
   initializeOperations,
   initializeOperationsG,
 };

@@ -184,6 +184,8 @@ It compares an object's field to a value and returns true or false. It's a curri
 - matchCaseSensitive = (a, b) => !!a.match(new RegExp(b, "g"));
 - isEven = a => a % 2 === 0;
 - isOdd = a => a % 2 !== 0;
+- isNull = a => a === null;
+- isNotNull = a => a !== null;
 ```
 
 - The object's **field name** which is a **string**. For example 'cost' for product.cost.

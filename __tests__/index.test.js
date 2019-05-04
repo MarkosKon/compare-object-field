@@ -14,6 +14,8 @@ import compareFieldToValue, {
   matchCaseSensitive,
   isEven,
   isOdd,
+  isNull,
+  isNotNull,
 } from '../src/index';
 import cards from './data/hearthstone-cards.json';
 import filterGroups from './data/filter-groups.json';
@@ -588,4 +590,34 @@ test('isOdd operation #3', () => {
 test('isOdd operation #4', () => {
   const a = 'even';
   expect(isOdd(a)).toEqual(true);
+});
+
+test('isNull operation #1', () => {
+  const a = null;
+  expect(isNull(a)).toEqual(true);
+});
+
+test('isNull operation #2', () => {
+  const a = undefined;
+  expect(isNull(a)).toEqual(false);
+});
+
+test('isNull operation #3', () => {
+  const a = 3;
+  expect(isNull(a)).toEqual(false);
+});
+
+test('isNotNull operation #1', () => {
+  const a = null;
+  expect(isNotNull(a)).toEqual(false);
+});
+
+test('isNotNull operation #2', () => {
+  const a = undefined;
+  expect(isNotNull(a)).toEqual(true);
+});
+
+test('isNotNull operation #3', () => {
+  const a = 'Hello';
+  expect(isNotNull(a)).toEqual(true);
 });
