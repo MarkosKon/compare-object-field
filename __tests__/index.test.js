@@ -74,6 +74,7 @@ test('README example #3 (with map)', () => {
   };
 
   const satisfiesAllFilters = (product, filters) => !filters
+    // eslint-disable-next-line max-len
     .map(filter => compareFieldToValue(operations[filter.operation])(filter.field)(filter.value)(product))
     .includes(false);
 
@@ -351,6 +352,12 @@ test('includes operation #4', () => {
   expect(includes(a, b)).toEqual(true);
 });
 
+test('includes operation #5. Does not throw if a is undefined.', () => {
+  const a = undefined;
+  const b = 2;
+  expect(includes(a, b)).toEqual(undefined);
+});
+
 test('notIncludes operation #1', () => {
   const a = 'My name is John';
   const b = 'Mark';
@@ -367,6 +374,12 @@ test('notIncludes operation #3', () => {
   const a = [1, 2, 3];
   const b = true;
   expect(notIncludes(a, b)).toEqual(true);
+});
+
+test('notIncludes operation #5. Does not throw if a is undefined.', () => {
+  const a = undefined;
+  const b = 2;
+  expect(notIncludes(a, b)).toEqual(undefined);
 });
 
 test('isIncludedIn operation #1', () => {
@@ -393,6 +406,18 @@ test('isIncludedIn operation #4', () => {
   expect(isIncludedIn(a, b)).toEqual(false);
 });
 
+test('isIncludedIn operation #5. Does not throw if a is undefined.', () => {
+  const a = undefined;
+  const b = [2];
+  expect(isIncludedIn(a, b)).toEqual(false);
+});
+
+test('isIncludedIn operation #6. Does not throw if b is undefined.', () => {
+  const a = 2;
+  const b = undefined;
+  expect(isIncludedIn(a, b)).toEqual(undefined);
+});
+
 test('notIncludedIn operation #1', () => {
   const a = 1;
   const b = [1, 2, 3];
@@ -415,6 +440,18 @@ test('notIncludedIn operation #4', () => {
   const a = [1];
   const b = [1, 2, 3];
   expect(notIncludedIn(a, b)).toEqual(true);
+});
+
+test('notIncludedIn operation #5. Does not throw if a is undefined.', () => {
+  const a = undefined;
+  const b = [2];
+  expect(notIncludedIn(a, b)).toEqual(true);
+});
+
+test('notIncludedIn operation #6. Does not throw if b is undefined.', () => {
+  const a = 2;
+  const b = undefined;
+  expect(notIncludedIn(a, b)).toEqual(undefined);
 });
 
 test('match operation #1', () => {
@@ -447,6 +484,12 @@ test('match operation #5', () => {
   expect(match(a, b)).toEqual(true);
 });
 
+test('match operation #6. Avoid runtime error if a is undefined.', () => {
+  const a = undefined;
+  const b = '\\d+';
+  expect(match(a, b)).toEqual(undefined);
+});
+
 test('notMatch operation #1', () => {
   const a = 'My name is Mark';
   const b = 'Mark';
@@ -475,6 +518,12 @@ test('notMatch operation #5', () => {
   const a = '1';
   const b = '\\d+';
   expect(notMatch(a, b)).toEqual(false);
+});
+
+test('notMatch operation #6. Avoid runtime error if a is undefined.', () => {
+  const a = undefined;
+  const b = '\\d+';
+  expect(notMatch(a, b)).toEqual(undefined);
 });
 
 test('matchCaseSensitive operation #1', () => {
