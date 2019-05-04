@@ -27,7 +27,8 @@
   },
   "keywords": [
     "compare object field",
-    "filter arrays"
+    "filter arrays",
+    "custom filters"
   ],
   "repository": {
     "type": "git",
