@@ -22,7 +22,7 @@
     "*.js": [
       "eslint",
       "git add",
-      "yarn test:staged"
+      "npm run test:staged"
     ]
   },
   "keywords": [
