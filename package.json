@@ -19,7 +19,7 @@
     }
   },
   "lint-staged": {
-    "*.{js,jsx}": [
+    "*.js": [
       "eslint",
       "git add",
       "yarn test:staged"

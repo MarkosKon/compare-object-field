@@ -4,10 +4,6 @@
  * a field name (string)  a value (it can be anything) and finally
  * the actual object. Check the documentation https://www.npmjs.com/package/compare-object-field
  * to get ideas how to use it.
- * @param {Function} operation
- * @param {String} field
- * @param {*} value
- * @param {Object} object
  */
 const compareFieldToValue = operation => field => value => object => operation(
   object[field],
@@ -34,9 +30,6 @@ const isOdd = a => a % 2 !== 0;
 /**
  * Compares objects with an array of filters. The filters can have
  * AND or OR between them. See the documentation for an example.
- * @param {Object} operations
- * @param {Array} filters
- * @param {boolean} satisfyAllFilters
  */
 const initializeOperations = operations => (filters, satisfyAllFilters = true) => {
   const allFiltersTrue = object => filters.reduce(
@@ -61,9 +54,6 @@ const isANDGroup = compareFieldToValue(equals)('operator')('AND');
  * Compares objects with a filter group. The filter group can have filters
  * or other filter groups as children. Additionally the filter group can have
  * AND or OR between the children. See the documentation for an example.
- * @param {Object} operations
- * @param {Object} parentGroup
- * @param {Object} object
  */
 const initializeOperationsG = operations => parentGroup => (object) => {
   const evaluateFilter = (result, filter, parentIsANDGroup) => {
