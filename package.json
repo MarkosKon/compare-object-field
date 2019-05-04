@@ -1,6 +1,6 @@
 {
   "name": "compare-object-field",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Compare an object's field with a value, or filter arrays of objects by a filter object.",
   "main": "dist/index.js",
   "scripts": {
